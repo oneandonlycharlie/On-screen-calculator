@@ -4,32 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>On-screen Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="javascript.js" defer></script>
 </head>
 <body>
     <div class="Calculator">
-        <p>This is the calculator</p>
-        <div class="display">This is the display window</div>
-        <div class="value">user input show here</div>
-        <div class="buttons">This is all the buttons</div>
+        <div class="display">
+            <p>This is the display window</p>
+            <div class="value">user input</div>
+        </div>
+        <div class="buttons">
+            <button class="button" id="AC">AC</button>
+            <button class="button">del</button>
+            <button class="button-operator">+</button>
             <button class="button-number">1</button>
             <button class="button-number">2</button>
             <button class="button-number">3</button>
+            <button class="button-operator">-</button>
             <button class="button-number">4</button>
             <button class="button-number">5</button>
             <button class="button-number">6</button>
+            <button class="button-operator">x</button>
             <button class="button-number">7</button>
             <button class="button-number">8</button>
             <button class="button-number">9</button>
-            <button class="button-number">0</button>
-            <button class="button-operator">+</button>
-            <button class="button-operator">-</button>
-            <button class="button-operator">x</button>
             <button class="button-operator">÷</button>
-            <button class="button">=</button>
             <button class="button">.</button>
-            <button class="button">AC</button>
-            <button class="button">del</button>
+            <button class="button-number">0</button>
+            <button class="button" id="equal">=</button>
+        </div>
     </div>
-    <footer>Copyright - Charlie GU</footer>
+    <div class="footer">
+        <p>Copyright Charlie GU</p>
+    </div>
 </body>
 </html>
