@@ -11,7 +11,7 @@ buttons.addEventListener("click", handleClick)
 
 function handleClick(e){
     let targetButton = e.target;
-    let currentNumber = 0
+    let currentNumber = result
     // register user input for calculation later
     switch (targetButton.className){
         case"button-number":
@@ -37,7 +37,7 @@ function handleClick(e){
         case"button-delete":
         // capture the last input    
         // find the last input and pop it from both the list and the window
-            deleteLastInput(textWindow);
+            deleteLastInput(resultWindow);
             break;
         case"button-equal":
             // capture the second number
@@ -81,10 +81,6 @@ function allClear(){
 }
 
 function deleteLastInput(location){
-    charToDelte = location.textContent[location.textContent.length-1];
-    if (numberList.includes(charToDelte)){
-        numberList.pop();
-    } 
     location.textContent = location.textContent.slice(0,-1)
 }
 
@@ -112,7 +108,7 @@ function calculate(operator, numbers){
                 break;
         };
     }
-    return typeof result== "string"? result : Math.floor(result*100)/100
+    return typeof result== "string"? result : result = Math.floor(result*100)/100
 }
 
 // This part handles opetaiton functions
