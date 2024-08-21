@@ -40,12 +40,15 @@ function handleClick(e){
             deleteLastInput(resultWindow);
             break;
         case"button-equal":
+            let equalSign = targetButton.textContent;
             // capture the second number
             currentNumber = resultWindow.textContent;
             numberList.push(currentNumber)
             // only calculate when user presses equal sign
             result = calculate(currentOperator,numberList);
+            // append(result,textWindow)
             refresh(result,resultWindow)
+            refresh("",textWindow)
             reset(numberList,result)
             break;
         case"button-decimal":
@@ -62,7 +65,7 @@ let result = '';
 
 function reset(array,value){
     if (typeof value !== "string") {
-        array.splice(0,2,value);
+        array.splice(0);
     }
 }
 
@@ -127,9 +130,7 @@ function multiply(num1,num2){
 
 function divide(num1,num2){
     if (num2=="0"){
-        numberList.pop();
-        deleteLastInput(textWindow);
-        return "Oops, can't divide by 0!"
+        return "Don't do this.."
     }
     return +num1 / +num2
 }
