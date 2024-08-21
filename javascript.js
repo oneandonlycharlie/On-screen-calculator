@@ -1,83 +1,139 @@
 // This part captures all html elements 
 const buttons = document.querySelector(".buttons")
-
+const textWindow = document.querySelector("p")
+const resultWindow = document.querySelector(".value")
 
 // This part handles all events 
 buttons.addEventListener("click", handleClick)
 
 
 // This part is evenhandling functions
-// 这里需要改成：点运算符和点等号结果一样，只是等号不会储存下一个运算符
+
 function handleClick(e){
     let targetButton = e.target;
+    let currentNumber = 0
+    // register user input for calculation later
     switch (targetButton.className){
         case"button-number":
-        // capture number 
-            let number = targetButton.textContent;
-        // add text to display window
-            numberList.push(number);
+        // capture numerical value
+            let value = targetButton.textContent;
+            append(value,resultWindow)
             break;
         case"button-operator":
-        // capture operator
+            // capture operator
             let operator = targetButton.textContent;
-        // add text to display window
-            operatorList.push(operator);
+            currentOperator = operator;
+            // capture number
+            currentNumber = resultWindow.textContent;
+            numberList.push(currentNumber)
+            // display values
+            append(currentNumber,textWindow)
+            append(operator,textWindow)
+            refresh("",resultWindow)
             break;
         case"button-AC":
-        // clear user input
-            result = '';
+            allClear("")
             break;
         case"button-delete":
         // capture the last input    
         // find the last input and pop it from both the list and the window
-            delete(lastInput);
+            deleteLastInput(textWindow);
             break;
         case"button-equal":
-        // start calculation
-            calculate();
+            // capture the second number
+            currentNumber = resultWindow.textContent;
+            numberList.push(currentNumber)
+            // only calculate when user presses equal sign
+            result = calculate(currentOperator,numberList);
+            refresh(result,resultWindow)
+            reset(numberList,result)
             break;
+        case"button-decimal":
+            let decimalPoint = targetButton.textContent;
+            append(decimalPoint,resultWindow)
     }
 }
 
 
-// This part handles display and error reminders
-let numberList = []
-let operatorList = []
-let value = 0
+// This part handles display and value variables
+let numberList = [];
+let currentOperator = '';
+let result = '';
 
+function reset(array,value){
+    if (typeof value !== "string") {
+        array.splice(0,2,value);
+    }
+}
+
+function append(text,location){
+    location.append(text)
+}
+
+function refresh(text,location){
+    location.textContent=text;
+}
+
+function allClear(){
+    numberList.splice(0);
+    refresh("",textWindow);
+    refresh("",resultWindow);
+}
+
+function deleteLastInput(location){
+    charToDelte = location.textContent[location.textContent.length-1];
+    if (numberList.includes(charToDelte)){
+        numberList.pop();
+    } 
+    location.textContent = location.textContent.slice(0,-1)
+}
 
 // This part handles the logic of calculation
 
-function calculate(operatorList, ...numberList){
-    /*
-    1. when numberList has 2 or more numbers and operatorList has 1 number,
-        - start calculation and return value as the input of next calculation
-        - show value
-    2. else, return an error massage, display the string and clear display and result.
-    2. After calculation
-        update the numberList and operator list so they are ready for the next calculation
-    3. if there are not enough numbers and operator, raise error
-    4. if calculation returns an error message / string, display the string and clear display and result.
-    */
+function calculate(operator, numbers){
+    // returns the result of calculation or error message
+    // if there is only 1 number, do not calculate
+    // Calculation starts
+    if (numbers.length >=2 && currentOperator !== ""){
+        switch (operator) {
+            case "+":
+                // calculate result
+                result = add(numbers[0],numbers[1]);
+                // display result
+                break;
+            case "-":
+                result = subtract(numbers[0],numbers[1]);
+                break;
+            case "x":
+                result = multiply(numbers[0],numbers[1]);
+                break;
+            case "÷":
+                result = divide(numbers[0],numbers[1]);
+                break;
+        };
+    }
+    return typeof result== "string"? result : Math.floor(result*100)/100
 }
 
 // This part handles opetaiton functions
 
 function add(num1,num2){
-    return num1+num2
+    return +num1 + +num2
 }
 
 function subtract(num1,num2){
-    return num1-num2
+    return +num1 - +num2
 }
 
 function multiply(num1,num2){
-    return num1*num2
+    return +num1 * +num2
 }
 
 function divide(num1,num2){
-    if (num2=0){
-        //returns an error message 
+    if (num2=="0"){
+        numberList.pop();
+        deleteLastInput(textWindow);
+        return "Oops, can't divide by 0!"
     }
-    return num1/num2
+    return +num1 / +num2
 }
