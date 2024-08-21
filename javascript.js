@@ -79,8 +79,9 @@ function refresh(text,location){
 
 function allClear(){
     numberList.splice(0);
-    refresh("",textWindow);
-    refresh("",resultWindow);
+    result = '';
+    refresh(result,textWindow);
+    refresh(result,resultWindow);
 }
 
 function deleteLastInput(location){
