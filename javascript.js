@@ -1,50 +1,47 @@
 // This part captures all html elements and key varibles
 const buttons = document.querySelector(".buttons")
 const currentInput = document.querySelector(".value")
-
-let operandList = [];
-let currentOperator = '';
-let result = '';
-let number = '';
-
-// This part handles all events 
 buttons.addEventListener("click", handleClick)
 
 
-// This part is evenhandling functions
+let currentOperator = '';
+let number = '';
+let operand = '';
 
+// This part is evenhandling function 
 function handleClick(e){
     let targetButton = e.target;
     switch (targetButton.className){
         case"button-number":  
             // capture number
             let digit = targetButton.textContent;
-            // add an operand
             number += digit;
             currentInput.textContent = number;
             break;
         case"button-operator":
-            // capture and calculate the first 2 operands
-            currnetOperand = number;
-            operandList.push(currnetOperand);
             // capture operator
+            if (operand != "" && currentOperator!= "" && operand !=currentInput.textContent){
+                calculate(currentOperator, operand, currentInput.textContent)
+            } else {
+                operand = currentInput.textContent;
+            }
             currentOperator = targetButton.textContent;
             number = "";
-            calculate(currentOperator,operandList);
             break;
         case"button-AC":
-            allClear("")
+            allClear();
+            currentInput.textContent = "";
+            number = "";
             break;
         case"button-delete": 
         // find the last digit and remove from input
-            number = number.slice(0,-1);
-            currentInput.textContent = number;
+            currentInput.textContent = currentInput.textContent.slice(0,-1);
+            number = currentInput.textContent;
             break;
         case"button-equal":
-            currnetOperand = number;
-            operandList.push(currnetOperand);
+            calculate(currentOperator,operand,currentInput.textContent)
+            allClear();
             number = "";
-            calculate(currentOperator,operandList);
             break;
         case"button-decimal":
             let decimalPoint = targetButton.textContent;
@@ -56,41 +53,38 @@ function handleClick(e){
 
 // This part handles the logic of calculation
 
-function calculate(operator, operands){
+function calculate(operator, firstInput, secondInput){
     // returns the result of calculation
     // if there are not enough operands, show current number as defualt
-    if (operands.length >=2 && operator !== ""){
+    let result = '';
         switch (operator) {
             case "+":
-                result = add(operands[0],operands[1]);
+                result = add(firstInput,secondInput);
                 break;
             case "-":
-                result = subtract(operands[0],operands[1]);
+                result = subtract(firstInput,secondInput);
                 break;
             case "x":
-                result = multiply(operands[0],operands[1]);
+                result = multiply(firstInput,secondInput);
                 break;
             case "÷":
-                result = divide(operands[0],operands[1]);
+                result = divide(firstInput,secondInput);
                 break;
         };
         //reset for next calculation
-        result = Math.floor(result*100)/100;
+        result = typeof result == "number"? Math.floor(result*100)/100 : result;
         currentInput.textContent = result;
-        allClear();
-        number = result;
-    }
-    
-
+        currentOperator = '';
+        operand = result;  
+        return operand
 }
 
 // This part handles display functions
 
 function allClear(){
     // clear all inputs
-    operandList.splice(0);
+    operand = '';
     currentOperator = '';
-    number = '';
 }
 
 // This part handles numerical operations
@@ -108,9 +102,9 @@ function multiply(num1,num2){
 }
 
 function divide(num1,num2){
-    if (num2=="0"){
+    if (num2 == "0"){
         allClear()
-        return "Don't do this.."
+        return "Don't do this.."  
     }
     return +num1 / +num2
 }
