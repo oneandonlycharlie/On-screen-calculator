@@ -15,7 +15,7 @@ body {
     font-family:Roboto;
 }
 
-.Calculator {
+.calculator {
     display:flex;
     flex-direction:column;
     background-color:rgb(239, 219, 194);
