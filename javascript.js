@@ -1,11 +1,11 @@
 // This part captures all html elements and key varibles
 const buttons = document.querySelector(".buttons")
-const inputHistory = document.querySelector("p")
 const currentInput = document.querySelector(".value")
 
 let operandList = [];
 let currentOperator = '';
 let result = '';
+let number = '';
 
 // This part handles all events 
 buttons.addEventListener("click", handleClick)
@@ -16,43 +16,40 @@ buttons.addEventListener("click", handleClick)
 function handleClick(e){
     let targetButton = e.target;
     switch (targetButton.className){
-        case"button-number":
-        // capture digit
+        case"button-number":  
+            // capture number
             let digit = targetButton.textContent;
-            append(digit,currentInput)
+            // add an operand
+            number += digit;
+            currentInput.textContent = number;
             break;
         case"button-operator":
+            // capture and calculate the first 2 operands
+            currnetOperand = number;
+            operandList.push(currnetOperand);
             // capture operator
             currentOperator = targetButton.textContent;
-            // capture operand
-            currnetOperand = currentInput.textContent;
-            operandList.push(currnetOperand)
-            // display inputs
-            append(currnetOperand,inputHistory)
-            append(currentOperator,inputHistory)
-            refresh("",currentInput)
+            number = "";
+            calculate(currentOperator,operandList);
             break;
         case"button-AC":
             allClear("")
             break;
         case"button-delete": 
         // find the last digit and remove from input
-            deleteLastInput(currentInput);
+            number = number.slice(0,-1);
+            currentInput.textContent = number;
             break;
         case"button-equal":
-            // capture the second operand
-            currnetOperand = currentInput.textContent;
-            operandList.push(currnetOperand)
-            // only calculate when user presses equal sign
-            result = calculate(currentOperator,operandList);
-            refresh(result,currentInput)
-            refresh("",inputHistory)
-            //reset for next calculation
-            reset(operandList,result)
+            currnetOperand = number;
+            operandList.push(currnetOperand);
+            number = "";
+            calculate(currentOperator,operandList);
             break;
         case"button-decimal":
             let decimalPoint = targetButton.textContent;
-            append(decimalPoint,currentInput)
+            number += decimalPoint;
+            currentInput.textContent = number;     
     }
 }
 
@@ -60,9 +57,9 @@ function handleClick(e){
 // This part handles the logic of calculation
 
 function calculate(operator, operands){
-    // returns the result of calculation or error message
-    // if there are not enough operands, do not calculate
-    if (operands.length >=2 && currentOperator !== ""){
+    // returns the result of calculation
+    // if there are not enough operands, show current number as defualt
+    if (operands.length >=2 && operator !== ""){
         switch (operator) {
             case "+":
                 result = add(operands[0],operands[1]);
@@ -77,35 +74,23 @@ function calculate(operator, operands){
                 result = divide(operands[0],operands[1]);
                 break;
         };
+        //reset for next calculation
+        result = Math.floor(result*100)/100;
+        currentInput.textContent = result;
+        allClear();
+        number = result;
     }
-    return typeof result== "string"? result : result = Math.floor(result*100)/100
+    
+
 }
 
 // This part handles display functions
-function reset(array,value){
-    if (typeof value !== "string") {
-        array.splice(0);
-    }
-}
-
-function append(text,location){
-    location.append(text)
-}
-
-function refresh(text,location){
-    location.textContent=text;
-}
 
 function allClear(){
-    // clear all inputs and history
+    // clear all inputs
     operandList.splice(0);
-    result = '';
-    refresh(result,inputHistory);
-    refresh(result,currentInput);
-}
-
-function deleteLastInput(location){
-    location.textContent = location.textContent.slice(0,-1)
+    currentOperator = '';
+    number = '';
 }
 
 // This part handles numerical operations
